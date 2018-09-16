@@ -1,0 +1,12 @@
+<?xml version='1.0'?>
+<manifest xmlns:android='http://schemas.android.com/apk/res/android' package='com.github.tuna' android:versionCode='0' android:versionName='0'>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <application android:label='TunA'>
+        <activity android:name='com.github.tuna.MainActivity'>
+             <intent-filter>
+                <category android:name='android.intent.category.LAUNCHER'/>
+                <action android:name='android.intent.action.MAIN'/>
+             </intent-filter>
+        </activity>
+    </application>
+</manifest>

@@ -8,6 +8,7 @@ public class Recorder extends Object{
   private int minSize;
   private int sample_rate = 44100;
   public short[] buffer = null;
+  public boolean buffer_ready = false;
 
   public void start(){
     minSize = AudioRecord.getMinBufferSize(sample_rate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
@@ -20,6 +21,7 @@ public class Recorder extends Object{
       ar.release();
     }
     ar = null;
+    buffer_ready = false;
   }
 
   public void recordAudio(){
@@ -27,6 +29,7 @@ public class Recorder extends Object{
     {
       start();
     }
+    buffer_ready = false;
 
     // Read data in a separate thread
     new Thread(new Runnable(){
@@ -52,6 +55,7 @@ public class Recorder extends Object{
         }
 
         ar.stop();
+        buffer_ready = true;
       }
     }).start();
   }

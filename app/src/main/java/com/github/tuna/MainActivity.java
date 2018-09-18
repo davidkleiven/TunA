@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
     Button record_button =(Button)findViewById(R.id.record_button);
     record_button.setText("Record");
 
-    GraphView raw_audio_graph = (GraphView) findViewById(R.id.raw_audio_graph);
+    GraphView raw_audio_graph = (GraphView) findViewById(R.id.freq_graph);
 
     // Set on click listener for record button
     record_button.setOnClickListener(

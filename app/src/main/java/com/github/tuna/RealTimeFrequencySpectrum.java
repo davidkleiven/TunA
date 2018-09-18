@@ -25,6 +25,9 @@ public class RealTimeFrequencySpectrum extends Fragment{
    GraphView graph = (GraphView) rootView.findViewById(R.id.freq_graph);
    dataSeries = new LineGraphSeries<>(getData());
    graph.addSeries(dataSeries);
+   graph.getViewport().setXAxisBoundsManual(true);
+   graph.getViewport().setMinX(0);
+   graph.getViewport().setMaxX(2000);
    return rootView;
   }
 

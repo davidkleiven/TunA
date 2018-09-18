@@ -6,13 +6,13 @@ import android.media.MediaRecorder;
 public class Recorder extends Object{
   private AudioRecord ar = null;
   private int minSize;
-  private int sample_rate = 44100;
-  public short[] buffer = null;
+  public int sample_rate = 44100;
+  public double[] buffer = null;
   public boolean buffer_ready = false;
 
   public void start(){
     minSize = AudioRecord.getMinBufferSize(sample_rate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-    buffer = new short[sample_rate * 2];
+    buffer = new double[sample_rate * 2];
     ar = new AudioRecord(MediaRecorder.AudioSource.MIC, sample_rate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, minSize);
   }
 

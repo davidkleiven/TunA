@@ -9,18 +9,13 @@
       android:layout_centerVertical="true"
       android:text="@string/welcome_message"
       tools:context=".MainActivity" />
- 
-      <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:id="@+id/raw_audio_graph"/>
 
       <Button
         android:id="@+id/record_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/record_button_text"
-        android:layout_below="@+id/raw_audio_graph"/>
+        android:layout_below="@+id/freq_graph"/>
 
 
 </RelativeLayout>

@@ -7,8 +7,14 @@
       android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
       android:layout_centerVertical="true"
-      android:text="@string/welcome_message"
+      android:text="Peak frequency: 0 Hz"
+      android:id="@+id/peak_frequency"
       tools:context=".MainActivity" />
+
+      <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:id="@+id/freq_graph"/>
 
       <Button
         android:id="@+id/record_button"

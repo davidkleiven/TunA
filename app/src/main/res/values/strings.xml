@@ -6,4 +6,5 @@
   <string name="record_button_text">Record</string>
   <string name="status_idle">Idle</string>
   <string name="status_recording">Recording</string>
+  <string name="clear_data_text">Clear data</string>
 </resources>

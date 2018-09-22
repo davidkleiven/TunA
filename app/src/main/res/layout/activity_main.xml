@@ -6,7 +6,6 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
-      android:layout_centerVertical="true"
       android:text="Peak frequency: 0 Hz"
       android:id="@+id/peak_frequency"
       tools:context=".MainActivity" />
@@ -14,7 +13,8 @@
       <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
         android:layout_height="200dip"
-        android:id="@+id/freq_graph"/>
+        android:id="@+id/freq_graph"
+        android:layout_below="@+id/peak_frequency"/>
 
       <Button
         android:id="@+id/record_button"
@@ -22,6 +22,19 @@
         android:layout_height="wrap_content"
         android:text="@string/record_button_text"
         android:layout_below="@+id/freq_graph"/>
+
+      <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:id="@+id/statistics"
+        android:layout_below="@+id/record_button"/>
+
+        <Button
+          android:id="@+id/clear_data_button"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/clear_data_text"
+          android:layout_below="@+id/statistics"/>
 
 
 </RelativeLayout>

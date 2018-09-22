@@ -1,6 +1,7 @@
 package com.github.tuna;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -9,7 +10,9 @@ import com.jjoe64.graphview.GraphView;
 
 
 public class MainActivity extends Activity {
-  protected Recorder rec = null;
+  private Recorder rec = null;
+  private RealTimeFrequencySpectrum spectrum = null;
+  private final Handler mHandler = new Handler();
 
   @Override
   protected void onCreate(Bundle savedInstanceState){
@@ -23,6 +26,11 @@ public class MainActivity extends Activity {
     record_button.setText("Record");
 
     GraphView raw_audio_graph = (GraphView) findViewById(R.id.freq_graph);
+
+    GraphView graph = (GraphView) findViewById(R.id.freq_graph);
+    graph.getViewport().setXAxisBoundsManual(true);
+    graph.getViewport().setMinX(0);
+    graph.getViewport().setMaxX(2000.0);
 
     // Set on click listener for record button
     record_button.setOnClickListener(

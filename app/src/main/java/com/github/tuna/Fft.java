@@ -21,7 +21,7 @@
  *   Software.
  */
 
-
+package com.github.tuna;
 public final class Fft {
 
 	/*

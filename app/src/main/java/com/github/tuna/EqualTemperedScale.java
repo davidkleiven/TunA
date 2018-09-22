@@ -1,7 +1,7 @@
 package com.github.tuna;
 
 public class EqualTemperedScale extends Object{
-  private double f0 = 440;
+  private double f0 = 442;
   private final double a = Math.pow(2.0, 1.0/12.0);
   private Note notes = new Note();
 

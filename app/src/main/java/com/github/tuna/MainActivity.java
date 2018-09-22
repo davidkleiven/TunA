@@ -45,8 +45,10 @@ public class MainActivity extends Activity {
           break;
         case HandlerMessages.graph_finished:
           peak_frequency.setText(String.format("Peak frequency: %,.1f Hz (%s)", spectrum.peak_freq, scale.tone(spectrum.peak_freq)));
-          pitch.update(spectrum.peak_freq);
-          updateStatistics();
+          if (!spectrum.only_noise){
+            pitch.update(spectrum.peak_freq);
+            updateStatistics();
+          }
           break;
       }
     }

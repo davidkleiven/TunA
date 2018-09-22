@@ -13,11 +13,13 @@ public class RealTimeFrequencySpectrum extends Object{
   private double raw_data_imag[] = null;
   private boolean graph_finished = true;
   private DataPoint values[] = null;
+  private double noise_level = 30;
   public Handler handler = null;
 
   private GraphView graph = null;
   public double sampling_rate = 44100;
   public double peak_freq = 0.0;
+  public boolean only_noise = false;
 
   public void setData(double data[]){
     if (raw_data == null){
@@ -80,6 +82,8 @@ public class RealTimeFrequencySpectrum extends Object{
         peak_freq = indx2frequency(i);
       }
     }
+
+    only_noise = (Math.log(peak_value) < noise_level);
 
     Message msg = Message.obtain();
     msg.what = HandlerMessages.graph_finished;

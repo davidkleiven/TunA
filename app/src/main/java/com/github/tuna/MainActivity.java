@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
   private RealTimeFrequencySpectrum spectrum = null;
   private boolean recording_is_running = false;
   private TextView peak_frequency = null;
+  private EqualTemperedScale scale = new EqualTemperedScale();
 
   private final Handler mHandler = new Handler(){
     @Override
@@ -33,7 +34,7 @@ public class MainActivity extends Activity {
           }
           break;
         case HandlerMessages.graph_finished:
-          peak_frequency.setText(String.format("Peak frequency: %,.1f Hz", spectrum.peak_freq));
+          peak_frequency.setText(String.format("Peak frequency: %,.1f Hz (%s)", spectrum.peak_freq, scale.tone(spectrum.peak_freq)));
       }
     }
   };

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
+import android.graphics.Color;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.PointsGraphSeries;
@@ -67,6 +68,8 @@ public class MainActivity extends Activity {
     Button record_button =(Button)findViewById(R.id.record_button);
     record_button.setText("Record");
 
+    Button clear_data_button = (Button)findViewById(R.id.clear_data_button);
+
     peak_frequency = (TextView)findViewById(R.id.peak_frequency);
 
     GraphView raw_audio_graph = (GraphView) findViewById(R.id.freq_graph);
@@ -114,6 +117,17 @@ public class MainActivity extends Activity {
             recording_is_running = false;
             record_button.setText("Record");
           }
+        }
+      }
+    );
+
+    // Set click listener for record button
+    clear_data_button.setOnClickListener(
+      new View.OnClickListener(){
+        @Override
+        public void onClick(View v){
+          pitch.reset();
+          updateStatistics();
         }
       }
     );

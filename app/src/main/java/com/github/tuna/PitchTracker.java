@@ -12,12 +12,20 @@ public class PitchTracker extends Object{
   private int num_keys = 0;
   public LinkedList<String> tracked_tones = new LinkedList<String>();
 
+  public void reset(){
+    sum_freq = new HashMap<String, Double>();
+    count_freq = new HashMap<String, Double>();
+    var_freq = new HashMap<String, Double>();
+    num_keys = 0;
+    tracked_tones = new LinkedList<String>();
+  }
+
   public String update(double freq){
     String key = scale.tone(freq);
     if (key == "Unknown"){
       return key;
     }
-    
+
     if (sum_freq.get(key) == null){
       // New tone, that we don't track yet
       sum_freq.put(key, freq);

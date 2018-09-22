@@ -19,6 +19,7 @@ public class MainActivity extends Activity {
   private Recorder rec = null;
   private RealTimeFrequencySpectrum spectrum = null;
   private boolean recording_is_running = false;
+  private TextView peak_frequency = null;
 
   private final Handler mHandler = new Handler(){
     @Override
@@ -31,6 +32,8 @@ public class MainActivity extends Activity {
             rec.recordAudio();
           }
           break;
+        case HandlerMessages.graph_finished:
+          peak_frequency.setText(String.format("Peak frequency: %,.1f Hz", spectrum.peak_freq));
       }
     }
   };
@@ -46,9 +49,12 @@ public class MainActivity extends Activity {
     rec.handler = mHandler;
     spectrum = new RealTimeFrequencySpectrum();
     spectrum.sampling_rate = rec.sampling_rate;
+    spectrum.handler = mHandler;
 
     Button record_button =(Button)findViewById(R.id.record_button);
     record_button.setText("Record");
+
+    peak_frequency = (TextView)findViewById(R.id.peak_frequency);
 
     GraphView raw_audio_graph = (GraphView) findViewById(R.id.freq_graph);
 

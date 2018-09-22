@@ -1,20 +1,23 @@
 package com.github.tuna;
 
+import android.os.Handler;
+import android.os.Message;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
 public class RealTimeFrequencySpectrum extends Object{
-  private Runnable timer;
   private LineGraphSeries<DataPoint> dataSeries = null;
   private double max_freq = 2000.0;
   private double raw_data[] = null;
   private double raw_data_imag[] = null;
-  public double sampling_rate = 44100;
   private boolean graph_finished = true;
   private DataPoint values[] = null;
+  public Handler handler = null;
 
   private GraphView graph = null;
+  public double sampling_rate = 44100;
+  public double peak_freq = 0.0;
 
   public void setData(double data[]){
     if (raw_data == null){
@@ -56,13 +59,17 @@ public class RealTimeFrequencySpectrum extends Object{
     if (graph == null){
       throw new RuntimeException("Graph has not been set!");
     }
+
+    if (handler == null){
+      throw new RuntimeException("No message handler set!");
+    }
+
     graph_finished = false;
 
     Fft fourier_transform = new Fft();
     fourier_transform.transformRadix2(raw_data, raw_data_imag);
     values = new DataPoint[datasetSize()];
     double peak_value = 0.0;
-    double peak_freq = 0.0;
     //values = new DataPoint[raw_data.length];
     for (int i=0;i<values.length;i++){
       double amp = Math.pow(raw_data[i], 2) + Math.pow(raw_data_imag[i], 2);
@@ -74,7 +81,10 @@ public class RealTimeFrequencySpectrum extends Object{
       }
     }
 
-    //graph.addSeries(dataSeries);
+    Message msg = Message.obtain();
+    msg.what = HandlerMessages.graph_finished;
+    handler.sendMessage(msg);
+
     graph.post(new Runnable(){
     @Override
     public void run(){

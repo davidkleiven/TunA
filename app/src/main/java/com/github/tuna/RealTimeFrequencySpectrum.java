@@ -2,17 +2,21 @@ package com.github.tuna;
 
 import android.os.Handler;
 import android.os.Message;
+import android.graphics.Color;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
 public class RealTimeFrequencySpectrum extends Object{
   private LineGraphSeries<DataPoint> dataSeries = null;
+  private PointsGraphSeries<DataPoint> peakMarkers = null;
   private double raw_data[] = null;
   private double raw_data_imag[] = null;
+  private double raw_log_amplitude[] = null;
   private boolean graph_finished = true;
   private DataPoint values[] = null;
-  private double raw_log_amplitude[] = null;
+  private DataPoint peaks[] = null;
   private double noise_level = 30;
   public Handler handler = null;
 
@@ -39,7 +43,11 @@ public class RealTimeFrequencySpectrum extends Object{
   public void setGraph(GraphView new_graph){
     graph = new_graph;
     dataSeries = new LineGraphSeries<DataPoint>();
+    peakMarkers = new PointsGraphSeries<DataPoint>();
+    peakMarkers.setSize(5);
+    peakMarkers.setColor(Color.GREEN);
     graph.addSeries(dataSeries);
+    graph.addSeries(peakMarkers);
   }
 
   private double indx2frequency(int indx){
@@ -105,6 +113,9 @@ public class RealTimeFrequencySpectrum extends Object{
     @Override
     public void run(){
       dataSeries.resetData(values);
+      if (peaks != null){
+        peakMarkers.resetData(peaks);
+      }
       graph_finished = true;
     }
   }
@@ -113,9 +124,20 @@ public class RealTimeFrequencySpectrum extends Object{
 
   public void estimateFundamental(){
     FundamentalFreqEstimator estimator = new FundamentalFreqEstimator();
-    estimator.threshold = noise_level;
+    estimator.threshold = 2;
     double min_group_sep = freq2indx(40.0);
     fundamental_freq = indx2frequency((int) estimator.estimateFundamental(raw_log_amplitude, min_group_sep));
+
+    if (estimator.peaks.size() == 0){
+      return;
+    }
+
+    peaks = new DataPoint[estimator.peaks.size()];
+    for (int i=0;i<estimator.peaks.size();i++){
+      double freq = indx2frequency(estimator.peaks.get(i));
+      double amp = raw_log_amplitude[estimator.peaks.get(i)];
+      peaks[i] = new DataPoint(freq, amp);
+    }
   }
 
   public void updateChartInThread(){

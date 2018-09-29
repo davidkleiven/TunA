@@ -6,21 +6,26 @@ import java.util.Arrays;
 
 public class FundamentalFreqEstimator extends Object{
   public double threshold = 0.0;
+  public List<Integer> peaks = new ArrayList<Integer>();
 
   public List<Integer> extractPeaks(double data[]){
-    List<Integer> peaks = new ArrayList<Integer>();
+    peaks = new ArrayList<Integer>();
+    ExponentialFilter filter = new ExponentialFilter();
+    filter.setDamping(0.1);
+    filter.addSample(data[0]);
     for (int i=1;i<data.length-1;i++){
-      if (data[i] > threshold){
+      if (data[i] > threshold+filter.get()){
         if ((data[i] > data[i-1]) && (data[i] > data[i+1])){
           peaks.add(i);
         }
       }
+      filter.addSample(data[i]);
     }
     return peaks;
   }
 
   public double estimateFundamental(double data[], double group_threshold){
-    List<Integer> peaks = extractPeaks(data);
+    peaks = extractPeaks(data);
 
     // Group the peaks in group where the maximum spread is given by
     // group threshold

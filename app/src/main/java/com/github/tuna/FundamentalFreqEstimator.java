@@ -63,13 +63,15 @@ public class FundamentalFreqEstimator extends Object{
     // Find the median difference
     Arrays.sort(differences);
 
-    double median = 0.0;
-    if (differences.length % 2 == 0){
-      median = (differences[differences.length/2] + differences[differences.length/2 - 1])/2;
+    // Use the middle third to estimate
+    int start = differences.length/3;
+    int end = 2*differences.length/3;
+    double mean = 0.0;
+    int counter = 0;
+    for (int i=start;i<end+1;i++){
+      mean += differences[i];
+      counter += 1;
     }
-    else{
-      median = differences[differences.length/2];
-    }
-    return median;
+    return mean/counter;
   }
 }

@@ -8,23 +8,26 @@ import com.jjoe64.graphview.series.DataPoint;
 
 public class RealTimeFrequencySpectrum extends Object{
   private LineGraphSeries<DataPoint> dataSeries = null;
-  private double max_freq = 2000.0;
   private double raw_data[] = null;
   private double raw_data_imag[] = null;
   private boolean graph_finished = true;
   private DataPoint values[] = null;
+  private double raw_log_amplitude[] = null;
   private double noise_level = 30;
   public Handler handler = null;
 
   private GraphView graph = null;
   public double sampling_rate = 44100;
   public double peak_freq = 0.0;
+  public double fundamental_freq = 0.0;
   public boolean only_noise = false;
+  public double max_freq = 2000.0;
 
   public void setData(double data[]){
     if (raw_data == null){
       raw_data = new double[data.length];
       raw_data_imag = new double[data.length];
+      raw_log_amplitude = new double[data.length];
     }
 
     for (int i=0;i<data.length;i++){
@@ -43,6 +46,10 @@ public class RealTimeFrequencySpectrum extends Object{
     double PI = 3.14159265359;
     return indx*sampling_rate/raw_data.length;
     //return 2.0*PI*indx*sampling_rate/raw_data.length;
+  }
+
+  private int freq2indx(double freq){
+    return (int)(freq*raw_data.length/sampling_rate);
   }
 
   private int datasetSize(){
@@ -75,6 +82,7 @@ public class RealTimeFrequencySpectrum extends Object{
     //values = new DataPoint[raw_data.length];
     for (int i=0;i<values.length;i++){
       double amp = Math.pow(raw_data[i], 2) + Math.pow(raw_data_imag[i], 2);
+      raw_log_amplitude[i] = Math.log(amp);
       values[i] = new DataPoint(indx2frequency(i), Math.log(amp));
 
       if (amp > peak_value){
@@ -84,6 +92,10 @@ public class RealTimeFrequencySpectrum extends Object{
     }
 
     only_noise = (Math.log(peak_value) < noise_level);
+
+    if (!only_noise){
+      estimateFundamental();
+    }
 
     Message msg = Message.obtain();
     msg.what = HandlerMessages.graph_finished;
@@ -97,6 +109,13 @@ public class RealTimeFrequencySpectrum extends Object{
     }
   }
     );
+  }
+
+  public void estimateFundamental(){
+    FundamentalFreqEstimator estimator = new FundamentalFreqEstimator();
+    estimator.threshold = noise_level;
+    double min_group_sep = freq2indx(40.0);
+    fundamental_freq = indx2frequency((int) estimator.estimateFundamental(raw_log_amplitude, min_group_sep));
   }
 
   public void updateChartInThread(){

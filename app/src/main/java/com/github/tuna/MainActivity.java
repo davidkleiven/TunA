@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
   private PointsGraphSeries<DataPoint> stat_series = new PointsGraphSeries<>();
   private DataPoint stat_values[] = null;
   private boolean stat_graph_finished_updating = true;
+  private double max_freq = 4000.0;
 
   private final Handler mHandler = new Handler(){
     @Override
@@ -44,7 +45,7 @@ public class MainActivity extends Activity {
           }
           break;
         case HandlerMessages.graph_finished:
-          peak_frequency.setText(String.format("Peak frequency: %,.1f Hz (%s)", spectrum.peak_freq, scale.tone(spectrum.peak_freq)));
+          peak_frequency.setText(String.format("Fundamental frequency: %,.1f Hz (%s)", spectrum.fundamental_freq, scale.tone(spectrum.fundamental_freq)));
           if (!spectrum.only_noise){
             pitch.update(spectrum.peak_freq);
             updateStatistics();
@@ -66,6 +67,7 @@ public class MainActivity extends Activity {
     spectrum = new RealTimeFrequencySpectrum();
     spectrum.sampling_rate = rec.sampling_rate;
     spectrum.handler = mHandler;
+    spectrum.max_freq = max_freq;
 
     Button record_button =(Button)findViewById(R.id.record_button);
     record_button.setText("Record");
@@ -79,7 +81,10 @@ public class MainActivity extends Activity {
     GraphView graph = (GraphView) findViewById(R.id.freq_graph);
     graph.getViewport().setXAxisBoundsManual(true);
     graph.getViewport().setMinX(0);
-    graph.getViewport().setMaxX(2000.0);
+    graph.getViewport().setMaxX(max_freq);
+    graph.getViewport().setYAxisBoundsManual(true);
+    graph.getViewport().setMinY(20);
+    graph.getViewport().setMaxY(40);
     GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
     gridLabel.setHorizontalAxisTitle("Frequency (Hz)");
     gridLabel.setVerticalAxisTitle("Log amplitude");

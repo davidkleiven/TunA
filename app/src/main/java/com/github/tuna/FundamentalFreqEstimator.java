@@ -47,6 +47,13 @@ public class FundamentalFreqEstimator extends Object{
       }
     }
 
+    if (group_means.size() == 0){
+      return 0.0;
+    }
+    else if (group_means.size() == 1){
+      return group_means.get(0);
+    }
+
     // As the peaks are returned in order the group means are also sorted
     double differences[] = new double[group_means.size()-1];
     for (int i=1;i<group_means.size();i++){

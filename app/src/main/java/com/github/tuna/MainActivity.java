@@ -64,6 +64,7 @@ public class MainActivity extends Activity {
     // Initialize the recorder
     rec = new Recorder();
     rec.handler = mHandler;
+    rec.setLowPass(18000.0);
     spectrum = new RealTimeFrequencySpectrum();
     spectrum.sampling_rate = rec.sampling_rate;
     spectrum.handler = mHandler;

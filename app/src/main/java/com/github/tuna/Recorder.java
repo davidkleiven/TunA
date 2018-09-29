@@ -14,6 +14,7 @@ public class Recorder extends Object{
   public double[] buffer = null;
   public boolean buffer_ready = false;
   public Handler handler = null;
+  private ExponentialFilter low_pass = null;
 
   public void start(){
     if (handler == null){
@@ -37,6 +38,22 @@ public class Recorder extends Object{
     }
     ar = null;
     buffer_ready = false;
+  }
+
+  public void setLowPass(double cut_off_freq){
+    low_pass = new ExponentialFilter();
+    low_pass.setDamping(cut_off_freq/sampling_rate);
+  }
+
+  public void applyLowPassFilter(){
+    if (low_pass == null){
+      return;
+    }
+
+    for (int i=0;i<buffer.length;i++){
+      low_pass.addSample(buffer[i]);
+      buffer[i] = low_pass.get();
+    }
   }
 
   public void recordAudio(){
@@ -72,6 +89,7 @@ public class Recorder extends Object{
         }
 
         stop();
+        applyLowPassFilter();
         buffer_ready = true;
         Message msg = Message.obtain();
         msg.what = HandlerMessages.recording_finished;

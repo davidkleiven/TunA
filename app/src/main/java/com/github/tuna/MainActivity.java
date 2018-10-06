@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
   private DataPoint stat_values[] = null;
   private boolean stat_graph_finished_updating = true;
   private double max_freq = 4000.0;
+  private AutoCorrPitch timeDomainPitch = new AutoCorrPitch();
 
   private final Handler mHandler = new Handler(){
     @Override
@@ -41,13 +42,15 @@ public class MainActivity extends Activity {
           if (recording_is_running){
             spectrum.setData(rec.buffer);
             spectrum.updateChartInThread();
+            timeDomainPitch.fundamentalFreq(rec.buffer, rec.sampling_rate);
             rec.recordAudio();
           }
           break;
-        case HandlerMessages.graph_finished:
-          peak_frequency.setText(String.format("Fundamental frequency: %,.1f Hz (%s)", spectrum.fundamental_freq, scale.tone(spectrum.fundamental_freq)));
+        case HandlerMessages.time_domain_freq_estimated:
+          double freq = timeDomainPitch.fund_freq;
+          peak_frequency.setText(String.format("Fundamental frequency: %,.1f Hz (%s)", freq, scale.tone(freq)));
           if (!spectrum.only_noise){
-            pitch.update(spectrum.peak_freq);
+            pitch.update(freq);
             updateStatistics();
           }
           break;
@@ -69,6 +72,8 @@ public class MainActivity extends Activity {
     spectrum.sampling_rate = rec.sampling_rate;
     spectrum.handler = mHandler;
     spectrum.max_freq = max_freq;
+
+    timeDomainPitch.handler = mHandler;
 
     Button record_button =(Button)findViewById(R.id.record_button);
     record_button.setText("Record");

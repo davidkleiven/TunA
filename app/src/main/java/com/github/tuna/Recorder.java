@@ -10,7 +10,7 @@ public class Recorder extends Object{
   private AudioRecord ar = null;
   private int minSize;
   public int sampling_rate = 44100;
-  private int buffer_length = 8192;
+  private int buffer_length = 4096;
   public double[] buffer = null;
   public boolean buffer_ready = false;
   public Handler handler = null;
